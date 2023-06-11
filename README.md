@@ -1,3 +1,10 @@
+---
+license: apache-2.0
+title: GoEmotions Dashboard
+sdk: streamlit
+sdk_version: "1.22.0"
+app_file: app.py
+---
 # GoEmotions Dashboard - Analyzing Emotions in Text
 
 This is a Python script that uses Streamlit, Plotly, and the Hugging Face API to create a web-based dashboard for analyzing emotions in text.

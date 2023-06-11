@@ -62,7 +62,7 @@ color_map = {
 
 
 # Labels for Hate Speech Classification
-label_hs = {"LABEL_0": "Acceptable", "LABEL_1": "inappropriate", "LABEL_2": "Offensive", "LABEL_3": "Violent"}
+label_hs = {"LABEL_0": "Acceptable", "LABEL_1": "Inappropriate", "LABEL_2": "Offensive", "LABEL_3": "Violent"}
 
 # Define default options
 
