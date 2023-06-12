@@ -28,7 +28,7 @@ pip install -r requirements.txt
 - Create a `.env` file in the root directory of the project and add your
 - Hugging Face API key like this: `HF_API_KEY=<your_api_key_here>`
 
-## Usage
+## Usage:
 
 - Navigate to the root directory of the project.
 - Run the Streamlit app by typing `streamlit run EDxHuggingface.py` in the command line.
