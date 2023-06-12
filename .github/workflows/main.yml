@@ -1,6 +1,7 @@
 name: Sync to Hugging Face hub
 on:
   push:
+  pull_request:
     branches: [main]
 
   # to run this workflow manually from the Actions tab

@@ -31,7 +31,8 @@ pip install -r requirements.txt
 ## Usage
 
 - Navigate to the root directory of the project.
-- Run the Streamlit app by typing `streamlit run EDxHuggingface.py` in the command line.
+- Run the Streamlit app by typing `streamlit run app.py` or `python -m streamlit run app.py` in the command line.
+- For GitHub Codespaces, Run: `python -m streamlit run app.py --server.enableCORS false --server.enableXsrfProtection false`
 
 - A web-based dashboard will open in your default browser.
 - Type or paste a text input in the text box provided.

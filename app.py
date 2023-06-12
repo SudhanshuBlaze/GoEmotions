@@ -13,6 +13,8 @@ HF_API_KEY = os.getenv("HF_API_KEY")
 # API_URL_ED = "https://api-inference.huggingface.co/models/j-hartmann/emotion-english-distilroberta-base" #alternate ED model(slow loading on first run)
 API_URL_ED = "https://api-inference.huggingface.co/models/bhadresh-savani/bert-base-go-emotion"
 API_URL_HS = "https://api-inference.huggingface.co/models/IMSyPP/hate_speech_en"
+API_URL_SD = "https://api-inference.huggingface.co/models/NLP-LTU/bertweet-large-sexism-detector"
+
 headers = {"Authorization": f"Bearer {HF_API_KEY}"}
 
 st.set_page_config(
@@ -26,7 +28,8 @@ st.title("GoEmotions Dashboard - Analyzing Emotions in Text")
 def query(payload):
     response_ED = requests.request("POST", API_URL_ED, headers=headers, json=payload)
     response_HS = requests.request("POST", API_URL_HS, headers=headers, json=payload)
-    return (json.loads(response_ED.content.decode("utf-8")),json.loads(response_HS.content.decode("utf-8")))
+    response_SD = requests.request("POST", API_URL_SD, headers=headers, json=payload)
+    return (json.loads(response_ED.content.decode("utf-8")),json.loads(response_HS.content.decode("utf-8")),json.loads(response_SD.content.decode("utf-8")))
 
 # Define color map for each emotion category
 color_map = {
@@ -64,6 +67,7 @@ color_map = {
 # Labels for Hate Speech Classification
 label_hs = {"LABEL_0": "Acceptable", "LABEL_1": "Inappropriate", "LABEL_2": "Offensive", "LABEL_3": "Violent"}
 
+
 # Define default options
 
 default_options = [
@@ -100,18 +104,17 @@ if submit:
 
     # Call API and get predicted probabilities for each emotion category and hate speech classification
     payload = {"inputs": text_input, "options": {"wait_for_model": True, "use_cache": True}}
-    response_ED, response_HS = query(payload)
+    response_ED, response_HS, response_SD = query(payload)
     predicted_probabilities_ED = response_ED[0]
     predicted_probabilities_HS = response_HS[0]
+    predicted_probabilities_SD = response_SD[0]
 
-    ED, _, HS = st.columns([5,2,3])
+    # Creating columns to visualize the results 
+    ED, _, HS, __, SD = st.columns([4,1,2,1,2])
 
     with ED:
-        # Sort the predicted probabilities in descending order
-        sorted_probs_ED = sorted(predicted_probabilities_ED, key=lambda x: x['score'], reverse=True)
-
         # Get the top 4 emotion categories and their scores
-        top_emotions = sorted_probs_ED[:4]
+        top_emotions = predicted_probabilities_ED[:4]
         top_scores = [e['score'] for e in top_emotions]
 
         # Normalize the scores so that they add up to 100%
@@ -124,11 +127,16 @@ if submit:
                             vertical_spacing=0.4)
 
         for i, emotion in enumerate(top_emotions):
+            # Get the emotion category, color, and normalized score for the current emotion
             category = emotion['label']
             color = color_map[category]
             value = normalized_scores[i]
+            
+            # Calculate the row and column position for adding the trace to the subplots
             row = i // 2 + 1
             col = i % 2 + 1
+            
+            # Add a gauge chart trace for the current emotion category
             fig.add_trace(go.Indicator(
                 domain={'x': [0, 1], 'y': [0, 1]},
                 value=value,
@@ -146,9 +154,9 @@ if submit:
                                     'thickness': 0.5,
                                     'value': 50}}), row=row, col=col)
 
-
-        # Update layout
+        # Update the layout of the figure
         fig.update_layout(height=400, margin=dict(t=50, b=5, l=0, r=0))
+
 
         # Display gauge charts
         st.text("")
@@ -160,6 +168,7 @@ if submit:
     
     with _:
         st.text("")
+        
 
     with HS:
         # Display Hate Speech Classification
@@ -172,9 +181,25 @@ if submit:
         st.image(f"assets/{hate_detection}.jpg", width=200)
         st.text("")
         st.text("")
+        st.markdown(f"#### The given text is: {hate_detection}")
+
+    with __:
+        st.text("")
+
+    with SD:
         st.text("")
         st.text("")
-        st.markdown(f"#### The given text is {hate_detection}")
+        st.text("")
+        st.subheader("Sexism Detection")
+        st.text("")
+        label_SD = predicted_probabilities_SD[0]['label'].title()
+        st.image(f"assets/{label_SD}.jpg", width=200)
+        st.text("")
+        st.text("")
+        st.markdown(f"#### The given text is: {label_SD}")
+
+        
+
 
  
 
