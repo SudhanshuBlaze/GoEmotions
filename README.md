@@ -14,6 +14,15 @@ This is a Python script that uses Streamlit, Plotly, and the Hugging Face Infere
 
 - Python 3.7 or higher
 
+## Project Structure:
+```dir
+GoEmotions/
+├── app.py
+├── requirements.txt
+├── .env
+└── README.md
+```
+
 ## Installation
 
 `Step 1` - Clone this repository to your local machine.
