@@ -20,7 +20,8 @@ GoEmotions/
 ├── app.py
 ├── requirements.txt
 ├── .env
-└── README.md
+├── README.md
+└── assets/
 ```
 
 ## Installation
